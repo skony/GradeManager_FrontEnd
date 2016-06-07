@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Grade Manager</title>
+        <style>
+            .main {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            :target {
+                display: block;
+            }
+            article {
+                display:none;
+                font-family: Tahoma, Geneva, sans-serif;
+                flex: 7;
+            }
+            nav {
+                display: flex;
+                font-family: Arial, Helvetica, sans-serif;
+                background: #FF694C;
+                color: black;
+                flex-direction: column;
+                flex-wrap: wrap;
+                flex: 1 0 33px;
+            }
+            .item {
+                
+            }
+            footer {
+                background: linear-gradient(to bottom, #feffff 0%,#ddf1f9 35%,#a0d8ef 100%);
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 0.9em;
+            }
+            header {
+                background: #3F46FF;
+                color: white;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            .img {
+                background-color: #FFCD8D;
+            }
+            a:link {
+                text-decoration: none;
+                color: black;
+            }
+            a:visited {
+                text-decoration: none;
+                color: black;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            a:active {
+                text-decoration: underline;
+                color: black;
+            }
+            tr:nth-child(even) {
+                background: #FFF;
+            }
+            tr:nth-child(odd) {
+                background: #3F46FF;
+                color: white;
+            }
+            tr:hover {
+                background: red;
+                color: white;
+            }
+            input {
+                border-color: #3F46FF;
+                border-width: 1px;
+                font: Tahoma, Geneva, sans-serif;
+                background: white;
+            }
+            @media print { 
+            
+                header, nav, footer, .actions {display: none}
+                
+                #art1, #art2, #art3 {color: black}
+                table {border: none}
+                input {border: none}
+                #tr1, #tr2, #tr3 {color: black}
+                table {
+                    border-collapse: collapse; 
+                }   
+                td {
+                    padding: 10px 0;     /* 10px top & bottom padding, 0px left & right */
+                    border-width: 1px 0; /*  1px top & bottom border,  0px left & right */
+                    border-color: #000;
+                    border-style: solid;
+                }
+            }
+        </style>
+    </head>
+	
+    <body>
+        <script src="jquery.js"></script>
+        <script src="knockout.js"></script>
+        <script src="knockout.mapping-latest.js"></script>
+        
+        <header>
+            <h1><img class="img" src="img/logo.jpg" alt="My company name" height="62"/>Student Grade Manager</h1>
+        </header>
+        <div class="main">
+            <nav>
+                <p class="item"><a href="#art1">Students</a></p>
+                <p class="item"><a href="#art2">Course</a></p>
+                <p class="item"><a href="#art3">Grades</a></p>
+            </nav>
+
+            <article id="art1">
+                <h1>List of Students</h1>
+                <table style="width:100%" border="1">
+                    <tr id="tr1">
+                        <td>Index</td>
+                        <td>Name</td>
+                        <td>Last Name</td>
+                        <td>Birthday</td>
+                        <td class="actions">Actions</td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" value="106650" required disabled/></td>
+                        <td><input type="text" value="Piotr" required/></td>
+                        <td><input type="text" value="Skonieczny" required/></td>
+                        <td><input type="date" value="1992-01-21" required/></td>
+                        <td class="actions">
+                            <button>See Grades</button>
+                            <button>Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" value="106651" required disabled/></td>
+                        <td><input type="text" value="Jan" required/></td>
+                        <td><input type="text" value="Kowalski" required/></td>
+                        <td><input type="date" value="1992-02-02" required/></td>
+                        <td class="actions">
+                            <button>See Grades</button>
+                            <button>Delete</button>
+                        </td>
+                    </tr>
+                </table>
+            </article>
+
+            <article id="art2">
+                <h1> List of Courses</h1>
+                <table style="width:100%" border="1">
+                    <tr id="tr2">
+                        <td>Name</td>
+                        <td>Professor</td>
+                        <td class="actions">Actions</td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" value="TPSI" required/></td>
+                        <td><input type="text" value="Tomasz Pawlak" placeholder="Professor"/></td>
+                        <td>
+                        </td>
+                    </tr>
+                </table>
+            </article>
+
+            <article id="art3">
+                <h1>List of Grades</h1>
+                <table style="width:100%" border="1">
+                    <tr id="tr3">
+                        <td>Mark</td>
+                        <td>Date</td>
+                        <td>Course</td>
+                        <td class="actions">Actions</td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" value="5.0" min="2.0" max="5.0" step="0.5" required/></td>
+                        <td><input type="date" value="2016-05-05"/></td>
+                        <td>
+                            <select >
+                                <option value="TPSI">TPSI</option>
+                                <option value="TPAL">TPAL</option>
+                            </select>
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+            </article>
+        </div>
+        <footer>
+            <p>Created by: Piotr Skonieczny <a href="mailto:piotr7skonieczny@gmail.com">piotr7skonieczny@gmail.com</a></p>
+            <p>University: Poznań University of Technology <a href="http://www.fc.put.poznan.pl">Faculty of Computing</a></p>
+        </footer>
+        
+        <script src="scripts.js"></script>
+   </body>
+</html>
