@@ -27,9 +27,6 @@
                 flex-wrap: wrap;
                 flex: 1 0 33px;
             }
-            .item {
-                
-            }
             footer {
                 background: linear-gradient(to bottom, #feffff 0%,#ddf1f9 35%,#a0d8ef 100%);
                 font-family: Arial, Helvetica, sans-serif;
@@ -106,7 +103,7 @@
         </header>
         <div class="main">
             <nav>
-                <p class="item"><a href="#art1">Students</a></p>
+                <p class="item" data-bind="click: loadItems"><a href="#art1">Students</a></p>
                 <p class="item"><a href="#art2">Course</a></p>
                 <p class="item"><a href="#art3">Grades</a></p>
             </nav>
