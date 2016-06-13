@@ -1,33 +1,33 @@
 "use strict";
 
-//function MyObservableArray() {
-//    
-//}
-//
-//var myArray = new MyObservableArray();
-//myArray.prototype = ko.observableArray();
-
 var studentListModel = function () {
-    this.items = ko.observableArray();
-    this.loadItems = function () {
+    this.items = ko.observableArray([]),
+    this.callback = function (data) {
+        ko.mapping.fromJS(data, {}, this.items);
+        var x = 1;
+    }.bind(this),
+    this.func = function(callback) {
         $.ajax({
             url: 'http://localhost:9998/service/students',
-            data: {
-                format: 'json'
+            headers: {          
+                 Accept : "application/json"        
+            },    
+            error: function(xhr, status, error) {
+                  var err = eval("(" + xhr.responseText + ")");
+                  alert(err.Message);
             },
-            error: function() {
-                alert('ERROR');
-            },
-           dataType: 'jsonp',
+           dataType: 'json',
            success: function(data) {
-              alert('SUCCESS');
+               callback(data);
            },
             fail : function() {
                 alert('FAIL');
             },
-           type: 'GET'
         });
-    };
+    },
+    this.loadItems = function () {
+        this.func(this.callback);
+    }
 };
 
 ko.applyBindings(new studentListModel());

@@ -79,15 +79,20 @@
                 #art1, #art2, #art3 {color: black}
                 table {border: none}
                 input {border: none}
-                #tr1, #tr2, #tr3 {color: black}
+                #tr1, #tr2, #tr3 {color: black;
+                background: white;}
                 table {
-                    border-collapse: collapse; 
+                    border-collapse: collapse;
                 }   
                 td {
                     padding: 10px 0;     /* 10px top & bottom padding, 0px left & right */
                     border-width: 1px 0; /*  1px top & bottom border,  0px left & right */
                     border-color: #000;
                     border-style: solid;
+                }
+                
+                body {
+                    background: white;
                 }
             }
         </style>
@@ -96,7 +101,7 @@
     <body>
         <script src="jquery.js"></script>
         <script src="knockout.js"></script>
-        <script src="knockout.mapping-latest.js"></script>
+        <script src="knockout.mapping.js"></script>
         
         <header>
             <h1><img class="img" src="img/logo.jpg" alt="My company name" height="62"/>Student Grade Manager</h1>
