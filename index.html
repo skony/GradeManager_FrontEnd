@@ -10,9 +10,6 @@
                 flex-direction: row;
                 flex-wrap: wrap;
             }
-            :target {
-                display: block;
-            }
             article {
                 display:none;
                 font-family: Tahoma, Geneva, sans-serif;
@@ -108,41 +105,42 @@
         </header>
         <div class="main">
             <nav>
-                <p class="item" data-bind="click: loadItems"><a href="#art1">Students</a></p>
-                <p class="item"><a href="#art2">Course</a></p>
-                <p class="item"><a href="#art3">Grades</a></p>
+                <p class="item" data-bind="click: loadItems"><a id="students_link" href="#art1">Students</a></p>
+                <p class="item"><a id="courses_link" href="#art2">Course</a></p>
+                <p class="item"><a id="grades_link" href="#art3">Grades</a></p>
             </nav>
 
             <article id="art1">
                 <h1>List of Students</h1>
                 <table style="width:100%" border="1">
-                    <tr id="tr1">
-                        <td>Index</td>
-                        <td>Name</td>
-                        <td>Last Name</td>
-                        <td>Birthday</td>
-                        <td class="actions">Actions</td>
-                    </tr>
-                    <tr>
-                        <td><input type="number" value="106650" required disabled/></td>
-                        <td><input type="text" value="Piotr" required/></td>
-                        <td><input type="text" value="Skonieczny" required/></td>
-                        <td><input type="date" value="1992-01-21" required/></td>
-                        <td class="actions">
-                            <button>See Grades</button>
-                            <button>Delete</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input type="number" value="106651" required disabled/></td>
-                        <td><input type="text" value="Jan" required/></td>
-                        <td><input type="text" value="Kowalski" required/></td>
-                        <td><input type="date" value="1992-02-02" required/></td>
-                        <td class="actions">
-                            <button>See Grades</button>
-                            <button>Delete</button>
-                        </td>
-                    </tr>
+                    <thead>
+                        <tr id="tr1">
+                            <td>Index</td>
+                            <td>Name</td>
+                            <td>Last Name</td>
+                            <td>Birthday</td>
+                            <td class="actions">Actions</td>
+                        </tr>
+                        <tr>
+                            <td><input type="number" required disabled/></td>
+                            <td><input id="new_student_name" type="text" required/></td>
+                            <td><input id="new_student_surname" type="text" required/></td>
+                            <td><input id="new_student_date" type="date" required/></td>
+                            <td class="actions"><button data-bind="click: registerNewStudent">Register</button></td>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: items">
+                        <tr>
+                            <td><input data-bind="value: index" type="number" required disabled/></td>
+                            <td><input data-bind="value: name" type="text" required/></td>
+                            <td><input data-bind="value: surname" type="text" required/></td>
+                            <td><input data-bind="value: date" type="date" required/></td>
+                            <td class="actions">
+                                <button>See Grades</button>
+                                <button>Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </article>
 
