@@ -1,13 +1,46 @@
 "use strict";
 
 var Student = function(data) {
-    this.index = data.index;
-    this.name = ko.observable(data.name);
-    this.surname = ko.observable(data.surname);
-    this.date = ko.observable(data.date);
-    
-    this.surname.subscribe(function() {
-        alert("Surname changed");
+    var self = this;
+    self.index = data.index;
+    self.name = ko.observable(data.name);
+    self.surname = ko.observable(data.surname);
+    self.date = ko.observable(data.date);    
+    self.name.subscribe(function(newValue) {
+        $.ajax({
+            url: 'http://localhost:9998/service/students/' + self.index,
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                "name":self.newValue,
+                "surname":self.surname(),
+                "date":self.date()
+                })
+        })
+    });  
+    self.surname.subscribe(function(newValue) {
+        $.ajax({
+            url: 'http://localhost:9998/service/students/' + self.index,
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                "name":self.name(),
+                "surname":newValue,
+                "date":self.date()
+                })
+        })
+    }); 
+    self.date.subscribe(function(newValue) {
+        $.ajax({
+            url: 'http://localhost:9998/service/students/' + self.index,
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                "name":self.name(),
+                "surname":self.surname(),
+                "date":newValue
+                })
+        })
     });
 };
 
@@ -32,12 +65,6 @@ var studentListModel = function () {
                     url: 'http://localhost:9998/service/students/' + change.value.index,
                     method: 'DELETE'
                 })
-                .done( function(data, textStatus, jqXHR) {
-                    console.log("SUCCESS");
-                })
-                .fail( function(jqXHR, textStatus, errorThrown) { 
-                    console.log("FAIL");
-                } );
             }
         });
     }, null, "arrayChange");
@@ -76,9 +103,6 @@ var studentListModel = function () {
             contentType: 'application/json',
             data: formDatathis
         })
-        .done( function(data, textStatus, jqXHR) {
-            
-        });
     };
     self.deleteStudent = function() {
         self.items.remove(this);
