@@ -21,55 +21,68 @@ var dataMappingOptions = {
 };
 
 var studentListModel = function () {
-    this.items = ko.observableArray([]);
-    this.callback = function (data) {
+    var self = this;
+    
+    self.items = ko.observableArray([]);
+    self.items.subscribe(function(changes) {
+        changes.forEach(function(change) {
+            if (change.status === 'deleted') {
+                console.log("Added or removed! The added/removed element is:", change.value);
+                $.ajax({
+                    url: 'http://localhost:9998/service/students/' + change.value.index,
+                    method: 'DELETE'
+                })
+                .done( function(data, textStatus, jqXHR) {
+                    console.log("SUCCESS");
+                })
+                .fail( function(jqXHR, textStatus, errorThrown) { 
+                    console.log("FAIL");
+                } );
+            }
+        });
+    }, null, "arrayChange");
+    self.callback = function (data) {
         for(var i=0; i<data.length; i++) {
             var studentObj = ko.mapping.fromJS(data[i], dataMappingOptions);
-            this.items.push(studentObj);
+            self.items.push(studentObj);
             var x = 1;
         }
-    }.bind(this);
-    this.func = function(callback) {
+    };
+    self.func = function(callback) {
         $.ajax({
             url: 'http://localhost:9998/service/students',
             headers: {          
                  Accept : "application/json"        
             },    
-            error: function(xhr, status, error) {
-                  var err = eval("(" + xhr.responseText + ")");
-                  alert(err.Message);
-            },
            dataType: 'json',
            success: function(data) {
                callback(data);
-           },
-            fail : function() {
-                alert('FAIL');
-            },
+           }
         });
     };
-    this.loadItems = function () {
-        if(this.items().length === 0) {
-            this.func(this.callback);
+    self.loadItems = function () {
+        if(self.items().length === 0) {
+            self.func(self.callback);
         }
     };
-    this.registerNewStudent = function() {
-        
+    self.registerNewStudent = function() {   
         var name = $('#new_student_name').val();
         var surname = $('#new_student_surname').val();
         var date = $('#new_student_date').val();
         var formData = JSON.stringify({"name":name, "surname":surname, "date":date});
-        var ssdf =4;
         $.ajax({
             url: 'http://localhost:9998/service/students',
             method: 'POST',
             contentType: 'application/json',
-            data: formData
+            data: formDatathis
         })
         .done( function(data, textStatus, jqXHR) {
-            var sds = 1;
+            
         });
     };
+    self.deleteStudent = function() {
+        self.items.remove(this);
+    }
 };
 
 ko.applyBindings(new studentListModel());
