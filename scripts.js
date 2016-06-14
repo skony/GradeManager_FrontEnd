@@ -52,7 +52,24 @@ var studentListModel = function () {
         if(this.items().length === 0) {
             this.func(this.callback);
         }
-    }
+    };
+    this.registerNewStudent = function() {
+        
+        var name = $('#new_student_name').val();
+        var surname = $('#new_student_surname').val();
+        var date = $('#new_student_date').val();
+        var formData = JSON.stringify({"name":name, "surname":surname, "date":date});
+        var ssdf =4;
+        $.ajax({
+            url: 'http://localhost:9998/service/students',
+            method: 'POST',
+            contentType: 'application/json',
+            data: formData
+        })
+        .done( function(data, textStatus, jqXHR) {
+            var sds = 1;
+        });
+    };
 };
 
 ko.applyBindings(new studentListModel());
