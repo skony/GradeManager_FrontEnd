@@ -69,10 +69,15 @@ var studentListModel = function () {
         });
     }, null, "arrayChange");
     self.callback = function (data) {
-        for(var i=0; i<data.length; i++) {
-            var studentObj = ko.mapping.fromJS(data[i], dataMappingOptions);
+        if(data instanceof Array) {
+            for(var i=0; i<data.length; i++) {
+                var studentObj = ko.mapping.fromJS(data[i], dataMappingOptions);
+                self.items.push(studentObj);
+            }
+        }
+        else {
+            var studentObj = ko.mapping.fromJS(data, dataMappingOptions);
             self.items.push(studentObj);
-            var x = 1;
         }
     };
     self.func = function(callback) {
@@ -96,13 +101,32 @@ var studentListModel = function () {
         var name = $('#new_student_name').val();
         var surname = $('#new_student_surname').val();
         var date = $('#new_student_date').val();
+        $('#new_student_name').val('');
+        $('#new_student_surname').val('');
+        $('#new_student_date').val('');
         var formData = JSON.stringify({"name":name, "surname":surname, "date":date});
         $.ajax({
             url: 'http://localhost:9998/service/students',
             method: 'POST',
             contentType: 'application/json',
-            data: formDatathis
+            data: formData
         })
+        .done( function(data, textStatus, jqXHR) { 
+                var location = jqXHR.getResponseHeader('Location');
+                self.addnewStudentToArray(location);
+        });
+    };
+    self.addnewStudentToArray = function(location) {
+        $.ajax({
+            url: location,
+            headers: {          
+                 Accept : "application/json"        
+            },    
+           dataType: 'json',
+           success: function(data) {
+               self.callback(data);
+           }
+        });
     };
     self.deleteStudent = function() {
         self.items.remove(this);
