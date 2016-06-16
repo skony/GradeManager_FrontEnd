@@ -106,7 +106,7 @@
         <div class="main">
             <nav>
                 <p class="item" data-bind="click: loadItems"><a id="students_link" href="#art1">Students</a></p>
-                <p class="item"><a id="courses_link" href="#art2">Course</a></p>
+                <p class="item" data-bind="click: loadItems2"><a id="courses_link" href="#art2">Course</a></p>
                 <p class="item"><a id="grades_link" href="#art3">Grades</a></p>
             </nav>
 
@@ -123,9 +123,9 @@
                         </tr>
                         <tr>
                             <td><input type="number" required disabled/></td>
-                            <td><input id="new_student_name" type="text" required/></td>
-                            <td><input id="new_student_surname" type="text" required/></td>
-                            <td><input id="new_student_date" type="date" required/></td>
+                            <td><input id="new_student_name" type="text" placeholder="Name" required/></td>
+                            <td><input id="new_student_surname" type="text" placeholder="Surname" required/></td>
+                            <td><input id="new_student_date" type="date" placeholder="Date" required/></td>
                             <td class="actions"><button data-bind="click: registerNewStudent">Register</button></td>
                         </tr>
                     </thead>
@@ -147,40 +147,56 @@
             <article id="art2">
                 <h1> List of Courses</h1>
                 <table style="width:100%" border="1">
-                    <tr id="tr2">
-                        <td>Name</td>
-                        <td>Professor</td>
-                        <td class="actions">Actions</td>
-                    </tr>
-                    <tr>
-                        <td><input type="text" value="TPSI" required/></td>
-                        <td><input type="text" value="Tomasz Pawlak" placeholder="Professor"/></td>
-                        <td>
-                        </td>
-                    </tr>
+                    <thead>
+                        <tr id="tr2">
+                            <td>Name</td>
+                            <td>Professor</td>
+                            <td class="actions">Actions</td>
+                        </tr>
+                        <tr>
+                            <td><input id="new_course_name" type="text" placeholder="Name" required/></td>
+                            <td><input id="new_course_professor" type="text" placeholder="Professor"/></td>
+                            <td class="actions">
+                                <button data-bind="click: registerNewCourse">Register</button>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: items2">Course
+                        <tr>
+                            <td><input data-bind="value: name" type="text" required/></td>
+                            <td><input data-bind="value: professor" type="text" placeholder="Professor"/></td>
+                            <td>
+                                <button data-bind="click: $parent.seeGrades">See Grades</button>
+                                <button data-bind="click: $parent.deleteCourse">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </article>
 
             <article id="art3">
                 <h1>List of Grades</h1>
+                <h2 data-bind="text: currentCourseName"></h2>
                 <table style="width:100%" border="1">
-                    <tr id="tr3">
-                        <td>Mark</td>
-                        <td>Date</td>
-                        <td>Course</td>
-                        <td class="actions">Actions</td>
-                    </tr>
-                    <tr>
-                        <td><input type="number" value="5.0" min="2.0" max="5.0" step="0.5" required/></td>
-                        <td><input type="date" value="2016-05-05"/></td>
-                        <td>
-                            <select >
-                                <option value="TPSI">TPSI</option>
-                                <option value="TPAL">TPAL</option>
-                            </select>
-                        </td>
-                        <td></td>
-                    </tr>
+                    <thead>
+                        <tr id="tr3">
+                            <td>Mark</td>
+                            <td>Date</td>
+                            <td>Student</td>
+                            <td class="actions">Actions</td>
+                        </tr>
+                        <tr>
+                            <td><input id="new_grade_mark" type="number" min="2.0" max="5.0" step="0.5" required/></td>
+                            <td><input id="new_grade_date" type="date"/></td>
+                            <td><select data-bind= "options: items,
+                                                    optionsText: function(item) { return item.fullName()},
+                                                    value: selectedStudent,
+                                                    optionsCaption: 'Choose...'"></select></td>
+                            <td><button data-bind="click: registerNewGrade">Register</button></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
                 </table>
             </article>
         </div>
