@@ -76,12 +76,11 @@ var Course = function(data) {
     }); 
 }
 
-var Grade = function(date) {
+var Grade = function(data) {
     var self = this;
-    self.id = data.id;
     self.mark = ko.observable(data.mark);
     self.date = ko.observable(data.date);
-    self.student = data.student.index;
+    self.student = new Student(data.student);
 }
 
 var dataMappingOptions = {
@@ -103,9 +102,6 @@ var dataMappingOptions2 = {
 };
 
 var dataMappingOptions3 = {
-    key: function(data) {
-        return data.id;        
-    },
     create: function(options) {
         return new Grade(options.data);
     }        
@@ -200,8 +196,8 @@ var studentListModel = function () {
         }
     };
     self.loadItems3 = function () {
-        self.items3 = ko.observableArray([]);
-        self.func(self.callback, 'grades' + self.currentCourseId);
+        self.items3.removeAll();
+        self.func(self.callback, 'grades' + '/' + self.currentCourseId);
     }
     self.registerNewStudent = function() {   
         var name = $('#new_student_name').val();
@@ -283,8 +279,18 @@ var studentListModel = function () {
         $('#art1').hide();
         $('#art2').hide();
         $('#art3').show('slow');
+        self.loadItems3();
     }
     self.selectedStudent = ko.observable();
+    self.findStudentByIndex = function(index) {
+        for(var i=0; i<self.items().length; i++) {
+            if(self.items()[i] === index) {
+                return self.items()[i];
+            }
+        }
+        
+        return null;
+    }
 };
 
 ko.applyBindings(new studentListModel() );
