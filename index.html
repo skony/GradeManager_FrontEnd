@@ -112,6 +112,7 @@
 
             <article id="art1">
                 <h1>List of Students</h1>
+                <input data-bind="textInput: searchInputStudent"/>
                 <table style="width:100%" border="1">
                     <thead>
                         <tr id="tr1">
@@ -146,6 +147,7 @@
 
             <article id="art2">
                 <h1> List of Courses</h1>
+                <input data-bind="textInput: searchInputCourse"/>
                 <table style="width:100%" border="1">
                     <thead>
                         <tr id="tr2">
@@ -200,7 +202,7 @@
                             <td><input data-bind="value: mark" type="number" min="2.0" max="5.0" step="0.5"/></td>
                             <td><input data-bind="value: date" type="date"/></td>
                             <td data-bind="text: student.fullName()"></td>
-                            <td></td>
+                            <td><button data-bind="click: $parent.deleteGrade">Delete</button></td>
                         </tr>
                     </tbody>
                 </table>

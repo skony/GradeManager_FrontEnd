@@ -78,9 +78,33 @@ var Course = function(data) {
 
 var Grade = function(data) {
     var self = this;
+    self.id = data.id;
     self.mark = ko.observable(data.mark);
     self.date = ko.observable(data.date);
     self.student = new Student(data.student);
+    self.courseId = data.courseId;
+    self.mark.subscribe(function(newValue) {
+        $.ajax({
+            url: 'http://localhost:9998/service/grades/' + self.courseId + '/' + self.id,
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                "mark":newValue,
+                "date":self.date()
+                })
+        })
+    });  
+    self.date.subscribe(function(newValue) {
+        $.ajax({
+            url: 'http://localhost:9998/service/grades/' + self.courseId + '/' + self.id,
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                "mark":self.mark(),
+                "date":newValue
+                })
+        })
+    }); 
 }
 
 var dataMappingOptions = {
@@ -102,6 +126,9 @@ var dataMappingOptions2 = {
 };
 
 var dataMappingOptions3 = {
+    key: function(data) {
+        return data.id;        
+    },
     create: function(options) {
         return new Grade(options.data);
     }        
@@ -113,7 +140,7 @@ var studentListModel = function () {
     self.items = ko.observableArray([]);
     self.items2 = ko.observableArray([]);
     self.items3 = ko.observableArray([]);
-    self.items.subscribe(function(changes) {
+    /*self.items.subscribe(function(changes) {
         changes.forEach(function(change) {
             if (change.status === 'deleted') {
                 console.log("Added or removed! The added/removed element is:", change.value);
@@ -134,7 +161,7 @@ var studentListModel = function () {
                 })
             }
         });
-    }, null, "arrayChange");
+    }, null, "arrayChange");*/
     self.callback = function (data, collection) {
         if(collection.startsWith('students')) {
             if(data instanceof Array) {
@@ -164,11 +191,13 @@ var studentListModel = function () {
             if(data instanceof Array) {
                 for(var i=0; i<data.length; i++) {
                     var obj = ko.mapping.fromJS(data[i], dataMappingOptions3);
+                    obj.courseId = self.currentCourseId;
                     self.items3.push(obj);
                 }
             }
             else {
                 var obj = ko.mapping.fromJS(data, dataMappingOptions3);
+                obj.courseId = self.currentCourseId;
                 self.items3.push(obj);
             }
         }
@@ -267,9 +296,24 @@ var studentListModel = function () {
     };
     self.deleteStudent = function() {
         self.items.remove(this);
+        $.ajax({
+                    url: 'http://localhost:9998/service/students/' + this.index,
+                    method: 'DELETE'
+        });
     }
     self.deleteCourse = function() {
         self.items2.remove(this);
+        $.ajax({
+                    url: 'http://localhost:9998/service/courses/' + this.id,
+                    method: 'DELETE'
+        });
+    };
+    self.deleteGrade = function() {
+        self.items3.remove(this);
+        $.ajax({
+                    url: 'http://localhost:9998/service/grades/' + self.currentCourseId + '/' + this.id,
+                    method: 'DELETE'
+        });
     };
     self.currentCourseName = '';
     self.currentCourseId = '';
@@ -280,7 +324,7 @@ var studentListModel = function () {
         $('#art2').hide();
         $('#art3').show('slow');
         self.loadItems3();
-    }
+    };
     self.selectedStudent = ko.observable();
     self.findStudentByIndex = function(index) {
         for(var i=0; i<self.items().length; i++) {
@@ -290,7 +334,17 @@ var studentListModel = function () {
         }
         
         return null;
-    }
+    };
+    self.searchInputStudent = ko.observable();
+    self.searchInputCourse = ko.observable();
+    self.searchInputStudent.subscribe(function(newValue) {
+        self.items.removeAll();
+        self.func(self.callback, 'students?param=' + newValue);
+    });
+    self.searchInputCourse.subscribe(function(newValue) {
+        self.items2.removeAll();
+        self.func(self.callback, 'courses?param=' + newValue);
+    });
 };
 
 ko.applyBindings(new studentListModel() );
